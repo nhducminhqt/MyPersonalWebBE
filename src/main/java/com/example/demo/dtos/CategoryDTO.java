@@ -1,13 +1,14 @@
 package com.example.demo.dtos;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
 
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CategoryDTO {
-    private Long id;
+    @NotEmpty(message = "category name can not be empty")
+    private String name;
+    private int num;
 }
