@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,18 +48,25 @@ public class ProductController {
                List<String> errorMessages = result.getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
                return ResponseEntity.badRequest().body(errorMessages);
            }
-           MultipartFile file = productDTO.getFile();
-           if(file != null){
-               if(file.getSize()>10*1024*1024){
-                   return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file is too large");
+           List<MultipartFile> files = productDTO.getFiles();
+           files = files == null ? new ArrayList<MultipartFile>(): files;
+           for (MultipartFile file: files){
+               if(file.getSize()==0){
+                   continue;
                }
-               String contentType = file.getContentType();
-               if(contentType == null || !contentType.startsWith("image/")){
-                   return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an image");
+               if(file != null){
+                   if(file.getSize()>10*1024*1024){
+                       return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file is too large");
+                   }
+                   String contentType = file.getContentType();
+                   if(contentType == null || !contentType.startsWith("image/")){
+                       return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an image");
 
+                   }
+                   String filename = storeFile(file);
                }
-               String filename = storeFile(file);
            }
+
 
            return ResponseEntity.ok("This is post med"+productDTO);
        }catch (Exception e){
