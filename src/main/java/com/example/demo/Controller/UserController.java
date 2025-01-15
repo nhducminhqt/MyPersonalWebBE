@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.dtos.UserDTO;
+import com.example.demo.dtos.UserLoginDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,9 @@ public class UserController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<String> login(){
-
+    public ResponseEntity<String> login(
+            @Valid @RequestBody UserLoginDTO userLoginDTO
+            ){
+    return ResponseEntity.ok("Login successfully");
     }
 }
