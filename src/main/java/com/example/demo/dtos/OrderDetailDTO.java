@@ -1,7 +1,13 @@
 package com.example.demo.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class OrderDetailDTO {
     @JsonProperty("order_id")
     private Long orderId;
