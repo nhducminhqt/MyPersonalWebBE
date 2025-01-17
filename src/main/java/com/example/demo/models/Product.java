@@ -2,9 +2,6 @@ package com.example.demo.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.generator.internal.GeneratedGeneration;
-
-@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
