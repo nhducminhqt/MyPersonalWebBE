@@ -14,4 +14,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String fullName;
+    private String phoneNumber;
+    private String address;
+    private String password;
+    private Boolean active;
+    private String dateOfBirth;
+    private int facebookAccountId;
+    private int googleAccountId;
 }
