@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package com.example.demo.repositories;
 
 import com.example.demo.models.Product;
 import com.google.api.gax.paging.Page;
