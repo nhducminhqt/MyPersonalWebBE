@@ -22,7 +22,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category deleteCategory(long id) {
-        return null;
+        return categoryRepository.getReferenceById(id);
     }
 
     @Override
