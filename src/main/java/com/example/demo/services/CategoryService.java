@@ -17,12 +17,16 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category updateCategory(long categoryId, Category category) {
-        return null;
+        Category existingCategory = getCategoryById(categoryId);
+        existingCategory.setName(category.getName());
+        return existingCategory;
+
     }
 
     @Override
-    public Category deleteCategory(long id) {
-        return categoryRepository.getReferenceById(id);
+    public String deleteCategory(long id) {
+        categoryRepository.deleteById(id);
+        return "Deleted Category";
     }
 
     @Override
@@ -32,6 +36,6 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category getCategoryById(long id) {
-        return null;
+        return categoryRepository.findById(id).orElseThrow(()-> new RuntimeException("Category not found"));
     }
 }
