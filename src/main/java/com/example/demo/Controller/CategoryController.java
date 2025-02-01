@@ -1,19 +1,19 @@
 package com.example.demo.Controller;
 import com.example.demo.dtos.CategoryDTO;
+import com.example.demo.services.CategoryService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.naming.Binding;
 import java.util.List;
-
+@RequiredArgsConstructor
 @RestController
 //@Validated
 @RequestMapping("api/v1/categories")
 public class CategoryController {
+    private final CategoryService categoryService;
     @GetMapping("")
     public ResponseEntity<String> getAllCategories(
             @RequestParam("page") int page,
@@ -21,8 +21,9 @@ public class CategoryController {
     ){
         return ResponseEntity.ok("chaobanhaha"+page +limit);
     }
+
     @PostMapping("")
-    public ResponseEntity<?> createCategories(@Valid @RequestBody  CategoryDTO categoryDTO,
+    public ResponseEntity<?> createCategory(@Valid @RequestBody  CategoryDTO categoryDTO,
                                                    BindingResult result){
         if(result.hasErrors()){
             List<String> errorMessages = result.getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
