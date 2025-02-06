@@ -29,6 +29,7 @@ public class CategoryController {
             List<String> errorMessages = result.getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
             return ResponseEntity.badRequest().body(errorMessages);
         }
+        categoryService.createCategory(categoryDTO);
         return ResponseEntity.ok("This is post med"+categoryDTO);
     }
     @PutMapping("/{id}")
