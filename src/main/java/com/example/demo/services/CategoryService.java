@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.dtos.CategoryDTO;
 import com.example.demo.models.Category;
 import com.example.demo.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,14 +12,15 @@ import java.util.List;
 public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
     @Override
-    public Category createCategory(Category category) {
-        return categoryRepository.save(category);
+    public Category createCategory(CategoryDTO categoryDTO) {
+        Category category = new Category();
+        return categoryRepository.save(categoryDTO);
     }
 
     @Override
-    public Category updateCategory(long categoryId, Category category) {
+    public Category updateCategory(long categoryId, CategoryDTO categoryDTO) {
         Category existingCategory = getCategoryById(categoryId);
-        existingCategory.setName(category.getName());
+        existingCategory.setName(categoryDTO.getName());
         return existingCategory;
 
     }

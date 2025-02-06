@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 @Setter
 public class User extends BaseEntity{
     @Id
