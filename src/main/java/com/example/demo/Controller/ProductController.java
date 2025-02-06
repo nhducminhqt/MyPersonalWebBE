@@ -1,6 +1,4 @@
 package com.example.demo.Controller;
-
-import com.example.demo.dtos.CategoryDTO;
 import com.example.demo.dtos.ProductDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
