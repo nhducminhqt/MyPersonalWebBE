@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 import com.example.demo.dtos.CategoryDTO;
+import com.example.demo.models.Category;
 import com.example.demo.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +16,12 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
     @GetMapping("")
-    public ResponseEntity<String> getAllCategories(
+    public ResponseEntity<List<Category>> getAllCategories(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
-        return ResponseEntity.ok("chaobanhaha"+page +limit);
+        List<Category> categories = categoryService.getAllCategories();
+        return ResponseEntity.ok(categories);
     }
 
     @PostMapping("")
@@ -33,8 +35,9 @@ public class CategoryController {
         return ResponseEntity.ok("This is post med"+categoryDTO);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCategories(@PathVariable Long id){
-        return ResponseEntity.ok("this is categories:"+id);
+    public ResponseEntity<String> updateCategories(@PathVariable Long id,CategoryDTO categoryDTO){
+        categoryService.updateCategory(id, categoryDTO);
+        return ResponseEntity.ok("updated");
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategories(@PathVariable Long id){
