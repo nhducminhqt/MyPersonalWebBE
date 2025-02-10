@@ -3,6 +3,8 @@ package com.example.demo.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name="users")
 @NoArgsConstructor
@@ -24,7 +26,7 @@ public class User extends BaseEntity{
     private String password;
     private Boolean active;
     @Column(name="date_of_birth")
-    private String dateOfBirth;
+    private Date dateOfBirth;
     @Column(name="facebook_account_id")
     private int facebookAccountId;
     @Column(name="google_account_id")

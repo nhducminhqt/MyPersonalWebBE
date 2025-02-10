@@ -17,6 +17,14 @@ public class UserService implements IUserService {
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
             throw new DataIntegrityViolationException("Phone number already exists");
         }
+        User newUser = User.builder()
+                .fullName(userDTO.getFullName())
+                .phoneNumber(phoneNumber)
+                .password(userDTO.getPassword())
+                .address(userDTO.getAddress())
+                .dateOfBirth(userDTO.getDateOfBirth())
+                .facebookAccountId(userDTO.getFacebookAccountId())
+                .googleAccountId(userDTO.getGoogleAccountId()).build();
         return null;
     }
 
