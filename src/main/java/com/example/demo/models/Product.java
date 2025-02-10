@@ -15,7 +15,7 @@ public class Product extends BaseEntity {
     private Long id;
     @Column(name = "name",nullable = false,length = 350)
     private String name;
-    private String price;
+    private Float price;
     @Column(name="description")
     private String description;
     @Column(name ="thumbnail")
