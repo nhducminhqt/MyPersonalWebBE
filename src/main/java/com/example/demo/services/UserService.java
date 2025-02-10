@@ -1,7 +1,9 @@
 package com.example.demo.services;
 
 import com.example.demo.dtos.UserDTO;
+import com.example.demo.models.Role;
 import com.example.demo.models.User;
+import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     @Override
     public User createUser(UserDTO userDTO) {
         String phoneNumber = userDTO.getPhoneNumber();
@@ -25,6 +28,7 @@ public class UserService implements IUserService {
                 .dateOfBirth(userDTO.getDateOfBirth())
                 .facebookAccountId(userDTO.getFacebookAccountId())
                 .googleAccountId(userDTO.getGoogleAccountId()).build();
+        Role role = roleRepository.findById(userDTO.getRoleId()).orElse(null);
         return null;
     }
 
