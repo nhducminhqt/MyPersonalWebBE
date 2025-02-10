@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dtos.ProductDTO;
+import com.example.demo.exceptions.DataNotFoundException;
 import com.example.demo.models.Category;
 import com.example.demo.models.Product;
 import com.example.demo.repositories.CategoryRepository;
@@ -9,15 +10,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.time.DateTimeException;
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     @Override
-    public Product createProduct(ProductDTO productDTO) {
+    public Product createProduct(ProductDTO productDTO) throws DataNotFoundException{
         Category existingCategory = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new DataNotFoundException("Category not found"));
     Product newProduct = Product.builder()
             .name(productDTO.getName())
             .price(productDTO.getPrice())
@@ -27,27 +32,39 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product getProductById(long id) {
-        return null;
+    public Product getProductById(long id) throws Exception{
+        return productRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Product not found"));
     }
 
     @Override
     public Page<Product> getAllProducts(PageRequest pageRequest) {
-        return null;
+        return productRepository.findAll(pageRequest);
     }
 
     @Override
-    public Product updateProduct(long id, ProductDTO productDTO) {
+    public Product updateProduct(long id, ProductDTO productDTO)throws Exception {
+        Product existingProduct = getProductById(id);
+        if (existingProduct != null) {
+            Category existingCategory = categoryRepository.findById(id).orElseThrow(()-> new DataNotFoundException("Category not found"));
+            existingProduct.setName(productDTO.getName());
+            existingProduct.setPrice(productDTO.getPrice());
+            existingProduct.setThumbnail(productDTO.getThumbnail());
+            existingProduct.setCategory(existingCategory);
+            existingProduct.setDescription(productDTO.getDescription());
+            return productRepository.save(existingProduct);
+        }
         return null;
+
     }
 
     @Override
     public void deleteProduct(long id) {
-
+        Optional<Product> productOptional = productRepository.findById(id);
+        productOptional.ifPresent(productRepository::delete);
     }
 
     @Override
     public boolean existsByName(String name) {
-        return false;
+        return productRepository.existsByName(name);
     }
 }
