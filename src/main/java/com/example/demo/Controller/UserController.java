@@ -2,8 +2,10 @@ package com.example.demo.Controller;
 
 import com.example.demo.dtos.UserDTO;
 import com.example.demo.dtos.UserLoginDTO;
+import com.example.demo.services.UserService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -13,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
+    private final UserService userService;
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO
     , BindingResult result) {
@@ -27,7 +30,9 @@ public class UserController {
             }
             if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
                 return ResponseEntity.badRequest().body("Passwords do not match");
+
             }
+            userService.createUser(userDTO);
             return ResponseEntity.ok("Register successfully");
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -37,6 +42,7 @@ public class UserController {
     public ResponseEntity<String> login(
             @Valid @RequestBody UserLoginDTO userLoginDTO
             ){
+        String token = userService.Login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
     return ResponseEntity.ok("Login successfully");
     }
 }
