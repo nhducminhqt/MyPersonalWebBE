@@ -1,6 +1,8 @@
 package com.example.demo.Controller;
 import com.example.demo.dtos.ProductDTO;
+import com.example.demo.services.ProductService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +21,11 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/products")
 public class ProductController {
+    private final ProductService productService;
     @GetMapping("")
     public ResponseEntity<?> getProduct(
             @RequestParam("page") int page,
@@ -65,7 +68,7 @@ public class ProductController {
                }
            }
 
-
+            productService.createProduct(productDTO);
            return ResponseEntity.ok("This is post med"+productDTO);
        }catch (Exception e){
            return ResponseEntity.badRequest().body(e.getMessage());
