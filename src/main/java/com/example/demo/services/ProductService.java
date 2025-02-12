@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.dtos.ProductDTO;
 import com.example.demo.dtos.ProductImageDTO;
 import com.example.demo.exceptions.DataNotFoundException;
+import com.example.demo.exceptions.InvalidParamException;
 import com.example.demo.models.Category;
 import com.example.demo.models.Product;
 import com.example.demo.models.ProductImage;
@@ -79,9 +80,9 @@ public class ProductService implements IProductService {
         //khong cho insert qua 5 image cho 1 san pham
          int size = productImageRepository.findByProductId(productId).size();
          if(size >= 5){
-             throw new DataNotFoundException("Product image is too large.");
+             throw new InvalidParamException("number of image must be <= 5");
          }
-        return null;
+        return productImageRepository.save(newProductImage);
 
     }
 }
