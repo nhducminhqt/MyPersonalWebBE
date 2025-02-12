@@ -1,14 +1,19 @@
 package com.example.demo.dtos;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
-import com.example.demo.models.Product;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class ProductImageDTO {
-    @ManyToOne
-    @JoinColumn(name="product_id")
-    private Product product;
-    @Column(name = "image_url",length=300)
+    @JsonProperty("product_id")
+    @Min(value =1,message = "Product ID >=1")
+    private Long productId;
+    @Size(min = 2, max = 200,message = "Image's name")
+    @JsonProperty("image_url")
     private String imageUrl;
 }

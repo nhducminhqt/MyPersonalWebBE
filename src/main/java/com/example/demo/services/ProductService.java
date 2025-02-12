@@ -1,16 +1,20 @@
 package com.example.demo.services;
 
 import com.example.demo.dtos.ProductDTO;
+import com.example.demo.dtos.ProductImageDTO;
 import com.example.demo.exceptions.DataNotFoundException;
 import com.example.demo.models.Category;
 import com.example.demo.models.Product;
 import com.example.demo.models.ProductImage;
 import com.example.demo.repositories.CategoryRepository;
+import com.example.demo.repositories.ProductImageRepository;
 import com.example.demo.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -18,6 +22,7 @@ import java.util.Optional;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductImageRepository productImageRepository;
     @Override
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException{
         Category existingCategory = categoryRepository.findById(productDTO.getCategoryId())
@@ -66,5 +71,17 @@ public class ProductService implements IProductService {
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
-    public ProductImage creatProductImage(Long productId, ProductImageDTO productImageDTO) {}
+    public ProductImage creatProductImage(Long productId
+                , ProductImageDTO productImageDTO) throws Exception {
+        Product existingProduct = productRepository.findById(productImageDTO.getProductId()).orElseThrow(()->new DataNotFoundException("Can not find product for image"));
+        ProductImage newProductImage = ProductImage.builder()
+                .product(existingProduct).imageUrl(productImageDTO.getImageUrl()).build();
+        //khong cho insert qua 5 image cho 1 san pham
+         int size = productImageRepository.findByProductId(productId).size();
+         if(size >= 5){
+             throw new DataNotFoundException("Product image is too large.");
+         }
+        return null;
+
+    }
 }
