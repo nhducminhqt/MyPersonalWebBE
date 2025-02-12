@@ -4,6 +4,7 @@ import com.example.demo.dtos.ProductDTO;
 import com.example.demo.exceptions.DataNotFoundException;
 import com.example.demo.models.Category;
 import com.example.demo.models.Product;
+import com.example.demo.models.ProductImage;
 import com.example.demo.repositories.CategoryRepository;
 import com.example.demo.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -65,4 +66,5 @@ public class ProductService implements IProductService {
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
+    public ProductImage creatProductImage(Long productId, ProductImageDTO productImageDTO) {}
 }
