@@ -72,6 +72,7 @@ public class ProductService implements IProductService {
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
+    @Override
     public ProductImage creatProductImage(Long productId
                 , ProductImageDTO productImageDTO) throws Exception {
         Product existingProduct = productRepository.findById(productImageDTO.getProductId()).orElseThrow(()->new DataNotFoundException("Can not find product for image"));

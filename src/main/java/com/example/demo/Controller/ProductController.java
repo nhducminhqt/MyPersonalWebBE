@@ -1,5 +1,8 @@
 package com.example.demo.Controller;
 import com.example.demo.dtos.ProductDTO;
+import com.example.demo.dtos.ProductImageDTO;
+import com.example.demo.models.Product;
+import com.example.demo.models.ProductImage;
 import com.example.demo.services.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +52,7 @@ public class ProductController {
                List<String> errorMessages = result.getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
                return ResponseEntity.badRequest().body(errorMessages);
            }
+           Product newProduct = productService.createProduct(productDTO);
            List<MultipartFile> files = productDTO.getFiles();
            files = files == null ? new ArrayList<MultipartFile>(): files;
            for (MultipartFile file: files){
@@ -65,10 +69,12 @@ public class ProductController {
 
                    }
                    String filename = storeFile(file);
+                    ProductImage productImage = productService.creatProductImage(newProduct.getId()
+                            ,ProductImageDTO.builder().imageUrl(filename).build());
                }
            }
 
-            productService.createProduct(productDTO);
+
            return ResponseEntity.ok("This is post med"+productDTO);
        }catch (Exception e){
            return ResponseEntity.badRequest().body(e.getMessage());

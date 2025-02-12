@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ProductImageDTO {
     @JsonProperty("product_id")
     @Min(value =1,message = "Product ID >=1")
