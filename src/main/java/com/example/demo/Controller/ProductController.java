@@ -42,40 +42,21 @@ public class ProductController {
         }
     return  ResponseEntity.ok("getProducts here" +productDTO);
     }
-    @PostMapping(value="",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("")
     public ResponseEntity<?> createProducts(
-            @Valid @ModelAttribute ProductDTO productDTO,
+            @Valid @RequestBody ProductDTO productDTO,
 //            @RequestPart("file") MultipartFile file,
-            BindingResult result, MultipartRequest multipartRequest){
+            BindingResult result){
        try {
            if(result.hasErrors()){
                List<String> errorMessages = result.getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
                return ResponseEntity.badRequest().body(errorMessages);
            }
            Product newProduct = productService.createProduct(productDTO);
-           List<MultipartFile> files = productDTO.getFiles();
-           files = files == null ? new ArrayList<MultipartFile>(): files;
-           for (MultipartFile file: files){
-               if(file.getSize()==0){
-                   continue;
-               }
-               if(file != null){
-                   if(file.getSize()>10*1024*1024){
-                       return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file is too large");
-                   }
-                   String contentType = file.getContentType();
-                   if(contentType == null || !contentType.startsWith("image/")){
-                       return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an image");
-
-                   }
-                   String filename = storeFile(file);
-                    ProductImage productImage = productService.creatProductImage(newProduct.getId()
-                            ,ProductImageDTO.builder().imageUrl(filename).build());
-               }
-           }
 
 
-           return ResponseEntity.ok("This is post med"+productDTO);
+
+           return ResponseEntity.ok(newProduct);
        }catch (Exception e){
            return ResponseEntity.badRequest().body(e.getMessage());
        }
@@ -105,6 +86,39 @@ public class ProductController {
     public ResponseEntity<String> deleteProductById(@PathVariable Long id
     ){
         return  ResponseEntity.ok("del Products here"+id);
+    }
+    @PostMapping(value = "uploads/{id}")
+    public ResponseEntity<?> uploadFile(@ModelAttribute("files") List<MultipartFile> files,@PathVariable Long productId)  {
+        try {
+            Product existingProduct = productService.getProductById(productId);
+            files = files == null ? new ArrayList<MultipartFile>(): files;
+            List<ProductImage> productImages = new ArrayList<>();
+            for (MultipartFile file: files) {
+                if (file.getSize() == 0) {
+                    continue;
+                }
+                if (file != null) {
+                    if (file.getSize() > 10 * 1024 * 1024) {
+                        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file is too large");
+                    }
+                    String contentType = file.getContentType();
+                    if (contentType == null || !contentType.startsWith("image/")) {
+                        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an image");
+
+                    }
+                    String filename = storeFile(file);
+                    ProductImage productImage = productService.creatProductImage(existingProduct.getId()
+                            , ProductImageDTO.builder().imageUrl(filename).build());
+                    productImages.add(productImage);
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(productImages);
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+
+        return null;
     }
 }
 
