@@ -87,8 +87,8 @@ public class ProductController {
     ){
         return  ResponseEntity.ok("del Products here"+id);
     }
-    @PostMapping(value = "uploads/{id}")
-    public ResponseEntity<?> uploadFile(@ModelAttribute("files") List<MultipartFile> files,@PathVariable Long productId)  {
+    @PostMapping(value = "uploads/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadImages(@ModelAttribute("files") List<MultipartFile> files,@PathVariable("id") Long productId)  {
         try {
             Product existingProduct = productService.getProductById(productId);
             files = files == null ? new ArrayList<MultipartFile>(): files;
@@ -116,9 +116,7 @@ public class ProductController {
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-
-        return null;
+        return  ResponseEntity.ok("uploadImages here");
     }
 }
 
