@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @Builder
 @Table(name="products")
+
 public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
