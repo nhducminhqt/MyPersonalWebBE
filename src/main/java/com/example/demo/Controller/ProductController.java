@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 
 
 import java.io.IOException;
@@ -88,10 +87,15 @@ public class ProductController {
         return  ResponseEntity.ok("del Products here"+id);
     }
     @PostMapping(value = "uploads/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadImages(@ModelAttribute("files") List<MultipartFile> files,@PathVariable("id") Long productId)  {
+    public ResponseEntity<?> uploadImages
+            (@PathVariable("id") Long productId,
+                    @RequestParam("files") List<MultipartFile> files)  {
         try {
             Product existingProduct = productService.getProductById(productId);
             files = files == null ? new ArrayList<MultipartFile>(): files;
+            if(files.size()>5){
+                return ResponseEntity.badRequest().body("You can only upload 5 images");
+            }
             List<ProductImage> productImages = new ArrayList<>();
             for (MultipartFile file: files) {
                 if (file.getSize() == 0) {

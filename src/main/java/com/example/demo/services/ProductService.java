@@ -76,7 +76,7 @@ public class ProductService implements IProductService {
     @Override
     public ProductImage creatProductImage(Long productId
                 , ProductImageDTO productImageDTO) throws Exception {
-        Product existingProduct = productRepository.findById(productImageDTO.getProductId()).orElseThrow(()->new DataNotFoundException("Can not find product for image"));
+        Product existingProduct = productRepository.findById(productId).orElseThrow(()->new DataNotFoundException("Can not find product for image"));
         ProductImage newProductImage = ProductImage.builder()
                 .product(existingProduct).imageUrl(productImageDTO.getImageUrl()).build();
         //khong cho insert qua 5 image cho 1 san pham
