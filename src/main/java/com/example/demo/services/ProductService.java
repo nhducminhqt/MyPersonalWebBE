@@ -81,8 +81,8 @@ public class ProductService implements IProductService {
                 .product(existingProduct).imageUrl(productImageDTO.getImageUrl()).build();
         //khong cho insert qua 5 image cho 1 san pham
          int size = productImageRepository.findByProductId(productId).size();
-         if(size >= 5){
-             throw new InvalidParamException("number of image must be <= 5");
+         if(size >= ProductImage.MAXIMUM_IMAGE_PER_PRODUCT){
+             throw new InvalidParamException("number of image must be <="+ProductImage.MAXIMUM_IMAGE_PER_PRODUCT);
          }
         return productImageRepository.save(newProductImage);
 

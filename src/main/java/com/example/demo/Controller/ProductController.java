@@ -93,8 +93,8 @@ public class ProductController {
         try {
             Product existingProduct = productService.getProductById(productId);
             files = files == null ? new ArrayList<MultipartFile>(): files;
-            if(files.size()>5){
-                return ResponseEntity.badRequest().body("You can only upload 5 images");
+            if(files.size()>ProductImage.MAXIMUM_IMAGE_PER_PRODUCT){
+                return ResponseEntity.badRequest().body("You can only upload "+ProductImage.MAXIMUM_IMAGE_PER_PRODUCT+" images");
             }
             List<ProductImage> productImages = new ArrayList<>();
             for (MultipartFile file: files) {
@@ -115,12 +115,13 @@ public class ProductController {
                             , ProductImageDTO.builder().imageUrl(filename).build());
                     productImages.add(productImage);
                 }
-                return ResponseEntity.status(HttpStatus.OK).body(productImages);
+
             }
+            return ResponseEntity.status(HttpStatus.OK).body(productImages);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return  ResponseEntity.ok("uploadImages here");
+
     }
 }
 
